@@ -1,0 +1,44 @@
+.registration-wrapper {
+  padding: 25px 25px 0 0;
+  display: none;
+}
+
+.registration-container {
+  width: 100%;
+}
+
+.registration-container table {
+  width: 100%;
+  color: #333;
+  font-family: Helvetica, Arial, sans-serif;
+  border-collapse:
+  collapse; border-spacing: 0;
+}
+
+.registration-container tbody td {
+  opacity: 0;
+  animation: fadeIn;
+  animation-duration: .3s;
+  animation-fill-mode: forwards;
+}
+
+.registration-container td, th { border: 1px solid #CCC; height: 30px; }
+
+.registration-container th {
+  background: #F3F3F3;
+  font-weight: bold;
+}
+
+.registration-container td {
+  background: #FAFAFA;
+  text-align: center;
+}
+
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1
+  }
+}
