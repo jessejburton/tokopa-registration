@@ -29,7 +29,7 @@
       </th>
       <td>
         <?php
-          $content = get_option('reminder_email');
+          $content = wpautop(get_option('reminder_email'));
           wp_editor( $content, 'reminder_email', $settings = array('textarea_rows' => 10));
         ?>
       </td>

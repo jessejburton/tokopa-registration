@@ -82,7 +82,7 @@ async function displayBalanceDetails({ deposit_order_id, balance_order_id, remin
 
   const balance_order_details = await getData(`/wp-json/wc/v3/orders/${balance_order_id}`);
 
-  balance_order_column.append(createLink(`/wp-admin/post.php?post=${balance_order_id}&action=edit`, balance_order_id));
+  balance_order_column.append(createLink(`/wp-admin/post.php?post=${balance_order_id}&action=edit`, balance_order_id + ' (' + balance_order_details.status + ')'));
   balance_amount_column.innerHTML = "$" + balance_order_details.total;
 
   if (reminder_sent === '0000-00-00 00:00:00') {

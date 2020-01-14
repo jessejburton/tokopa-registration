@@ -123,10 +123,9 @@ function deposits_install() {
 	global $deposits_db_version;
 
 	$table_name = $wpdb->prefix . 'registration_deposits';
+  $charset_collate = $wpdb->get_charset_collate();
 
-	$charset_collate = $wpdb->get_charset_collate();
-
-	$sql = "CREATE TABLE $table_name (
+	$sql = "CREATE TABLE IF NOT EXISTS $table_name (
 		id mediumint(9) NOT NULL AUTO_INCREMENT,
 		time datetime DEFAULT CURRENT_TIMESTAMP NOT NULL,
 		deposit_order_id int NOT NULL UNIQUE,
