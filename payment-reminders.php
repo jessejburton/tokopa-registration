@@ -13,6 +13,13 @@
     FROM {$wpdb->prefix}registration_deposits"
   );
 
+  for ($x = 0; $x < count($balance_orders); $x++) {
+    $order_details = wc_get_order( $balance_orders[$x]->balance_order_id );
+    if($order_details->get_status() !== 'pending'){
+      unset($balance_orders[$x]);
+    }
+  }
+
   if(isset($_POST['send_selected_order'])){
     $orders_to_send = array();
     array_push($orders_to_send, $_POST["balance_order_id"]);
@@ -21,6 +28,7 @@
   if(isset($_POST['send_unset_reminders'])){
     $orders_to_send = array();
     foreach ($balance_orders as $order) {
+      $balance_order = wc_get_order( $order );
       if(!isset($reminder_sent) || $reminder_sent === '0000-00-00 00:00:00'){
         array_push($orders_to_send, $order->balance_order_id);
       }
@@ -90,7 +98,15 @@
   };
 
   function sendReminderEmail($order_id, $email){
-    $order = wc_get_order( $order_id );
+    // Get Order details
+    global $wpdb;
+    $balance_orders = $wpdb->get_row( "
+      SELECT deposit_order_id, balance_order_id, reminder_sent
+      FROM {$wpdb->prefix}registration_deposits
+      WHERE balance_order_id = {$order_id}"
+    );
+    $deposit_order = wc_get_order( $balance_orders->deposit_order_id );
+    $order = wc_get_order( $balance_orders->balance_order_id );
 
     $pay_now_url = esc_url( $order->get_checkout_payment_url() );
     $pay_now_link = '<a href="' . $pay_now_url . '">pay</a>';
@@ -98,34 +114,87 @@
     $customer_name = $order->get_billing_first_name() . ' ' . $order->get_billing_last_name();
 
     if($email !== ''){
+      $test = true;
       $to = $email;
     } else {
+      $test = false;
       $to = $order->get_billing_email();
     }
     $subject = get_option('reminder_subject');
-    $body = str_replace(["{pay}", "{name}"], [$pay_now_link, $customer_name], wpautop(get_option('reminder_email')));
+
+    $styles = '<style type="text/css">
+      table {
+        width: 100%;
+      }
+      th {
+        background-color: #b279ff;
+        color: white;
+        font-weight: bold;
+        text-align: center;
+        padding: 10px;
+      }
+      td {
+        width: 50%;
+        padding: 25px;
+        text-align: center;
+      }
+      .button {
+        text-decoration: none;
+        text-transform: uppercase;
+        padding: 10px 15px;
+        cursor: pointer;
+        color: white;
+        border: 1px solid #8b53d8;
+        background: linear-gradient(to bottom,#b279ff 0,#a35fff 100%);
+        transition: all .3s ease;
+      }
+      .button:hover {
+        background: #8b53d8;
+      }
+    </style>';
+
+    $invoice_details = '<table style="width: 100%; border: 1px solid black;">';
+      $invoice_details = $invoice_details . '<tr><th>Deposit</th><th>Balance</th></tr>';
+      $invoice_details = $invoice_details . '<tr>';
+        $invoice_details = $invoice_details . '<td>Paid $300 on' . date_format($deposit_order->get_date_paid(), 'F jS, Y') . '</td>';
+        $invoice_details = $invoice_details . '<td><a class="button" href="' . $pay_now_url . '">Pay Balance of $'. $order->get_total()  .'</a></td>';
+      $invoice_details = $invoice_details . '</tr>';
+    $invoice_details = $invoice_details . '</table>';
+
+    $content = str_replace(["{pay}", "{name}", "{details}"], [$pay_now_link, $customer_name, $invoice_details], wpautop(get_option('reminder_email')));
+
+    $body = $styles;
+    $body = $body . '<div style="width:650px; margin: 0 auto; font-family: sans-serif; font-size: 16px;">';
+      $body = $body . '<img src="https://toko-pa.com/wp-content/uploads/2020/01/image0.jpeg" />';
+      $body = $body . '<div style="margin: 25px 0;">';
+        $body = $body . $content;
+      $body = $body . '</div>';
+    $body = $body . '</div>';
+
     $headers = array('Content-Type: text/html; charset=UTF-8');
 
     wp_mail( $to, $subject, $body, $headers );
 
     // Update Reminder Date
-    global $wpdb;
+    if(!$test){
+      global $wpdb;
 
-    $table_name = $wpdb->prefix . 'registration_deposits';
+      $table_name = $wpdb->prefix . 'registration_deposits';
 
-    $wpdb->update(
-      $table_name,
-      array('reminder_sent' => current_time( 'mysql' )),
-      array('balance_order_id' => $order_id)
-    );
+      $wpdb->update(
+        $table_name,
+        array('reminder_sent' => current_time( 'mysql' )),
+        array('balance_order_id' => $order_id)
+      );
+    }
   }
 
 ?>
 
 <p style="font-size: 1.8em;">
-  <strong><?php echo count($balance_orders); ?></strong> deposit orders<br />
-  <strong><?php echo $sent; ?></strong> reminders sent<br />
-  <strong><?php echo $unsent; ?></strong> reminders not sent<br />
+  <strong><?php echo count($balance_orders); ?></strong> unpaid deposit orders<br />
+  <strong><?php echo $sent; ?></strong> unpaid reminder(s) sent<br />
+  <strong><?php echo $unsent; ?></strong> unpaid reminder(s) not sent<br />
 </p>
 
 <form

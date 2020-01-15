@@ -7,7 +7,7 @@
 /*
 Plugin Name: Toko-pa ~ Registration Deposits
 Plugin URI: https://www.burtonmediainc.com/plugins/tokopadeposits
-Description: A plugin that handles sending reminder invoices to customers
+Description: A plugin that handles deposits for the annual retreat registration.
 Version: 1.0.0
 Author: Jesse James Burton
 Author URI: https://www.burtonmediainc.com
