@@ -140,3 +140,31 @@ function deposits_install() {
 	add_option( 'deposits_db_version', $deposits_db_version );
 }
 register_activation_hook( __FILE__, 'deposits_install' );
+
+/*
+* Needed to make orders payable without login.
+*/
+function allow_payment_without_login( $allcaps, $caps, $args ) {
+  // Check we are looking at the WooCommerce Pay For Order Page
+  if ( !isset( $caps[0] ) || $caps[0] != 'pay_for_order' )
+      return $allcaps;
+  // Check that a Key is provided
+  if ( !isset( $_GET['key'] ) )
+      return $allcaps;
+
+  // Find the Related Order
+  $order = wc_get_order( $args[2] );
+  if( !$order )
+      return $allcaps; # Invalid Order
+
+  // Get the Order Key from the WooCommerce Order
+  $order_key = $order->get_order_key();
+  // Get the Order Key from the URL Query String
+  $order_key_check = $_GET['key'];
+
+  // Set the Permission to TRUE if the Order Keys Match
+  $allcaps['pay_for_order'] = ( $order_key == $order_key_check );
+
+  return $allcaps;
+}
+add_filter( 'user_has_cap', 'allow_payment_without_login', 10, 3 );

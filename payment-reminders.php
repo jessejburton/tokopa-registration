@@ -151,12 +151,15 @@
       .button:hover {
         background: #8b53d8;
       }
+      @media only screen and (max-width: 30em) {
+        .button { display: block }
+      }
     </style>';
 
     $invoice_details = '<table style="width: 100%; border: 1px solid black;">';
       $invoice_details = $invoice_details . '<tr><th>Deposit</th><th>Balance</th></tr>';
       $invoice_details = $invoice_details . '<tr>';
-        $invoice_details = $invoice_details . '<td>Paid $300 on' . date_format($deposit_order->get_date_paid(), 'F jS, Y') . '</td>';
+        $invoice_details = $invoice_details . '<td>Paid $'. $deposit_order->get_total()  .' on ' . date_format($deposit_order->get_date_paid(), 'F jS, Y') . '</td>';
         $invoice_details = $invoice_details . '<td><a class="button" href="' . $pay_now_url . '">Pay Balance of $'. $order->get_total()  .'</a></td>';
       $invoice_details = $invoice_details . '</tr>';
     $invoice_details = $invoice_details . '</table>';
@@ -164,7 +167,7 @@
     $content = str_replace(["{pay}", "{name}", "{details}"], [$pay_now_link, $customer_name, $invoice_details], wpautop(get_option('reminder_email')));
 
     $body = $styles;
-    $body = $body . '<div style="width:650px; margin: 0 auto; font-family: sans-serif; font-size: 16px;">';
+    $body = $body . '<div class="content" style="width:650px; margin: 0 auto; font-family: sans-serif; font-size: 16px;">';
       $body = $body . '<img src="https://toko-pa.com/wp-content/uploads/2020/01/image0.jpeg" />';
       $body = $body . '<div style="margin: 25px 0;">';
         $body = $body . $content;
@@ -236,7 +239,7 @@
       name="send_unset_reminders"
       onclick="orders_to_send='<?php echo $unsent; ?> registrants'"
     >
-      Send Payment Reminders for <strong>ALL UNSENT</strong> Orders (<?php echo $unsent; ?>)
+      Send Payment Reminders for <strong>ALL UNPAID & UNSENT</strong> Orders (<?php echo $unsent; ?>)
     </button>
   </div>
   <div style="margin-bottom: 20px;">
@@ -246,7 +249,7 @@
       name="send_all_reminders"
       onclick="orders_to_send='all <?php echo count($balance_orders); ?> registrants'"
     >
-      Send Payment Reminders for <strong>ALL</strong> Orders (<?php echo count($balance_orders); ?>)
+      Send Payment Reminders for <strong>ALL UNPAID</strong> Orders (<?php echo count($balance_orders); ?>)
     </button>
   </div>
   <hr />
