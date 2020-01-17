@@ -32,7 +32,7 @@ function add_tokopa_registration_plugin_script($hook) {
   if( $hook != 'tokopa-registration/registration-deposits.php' ) {
     return;
   }
-  wp_enqueue_script( 'tokopa-registration-scripts', plugins_url('tokopa-registration.js',__FILE__ ), array(), '1.1', 'all', false);
+  wp_enqueue_script( 'tokopa-registration-scripts', plugins_url('tokopa-registration.js',__FILE__ ), array(), '1.3', 'all', false);
 
   // Localize the plugin options to the script
   $consumer_key = get_option('woocommerce_consumer_key');
@@ -168,3 +168,4 @@ function allow_payment_without_login( $allcaps, $caps, $args ) {
   return $allcaps;
 }
 add_filter( 'user_has_cap', 'allow_payment_without_login', 10, 3 );
+

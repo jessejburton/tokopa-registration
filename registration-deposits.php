@@ -51,3 +51,5 @@
   </div>
 
 </div>
+
+<?php require_once('get-quantities.php'); ?>

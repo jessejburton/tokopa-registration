@@ -152,7 +152,10 @@
         background: #8b53d8;
       }
       @media only screen and (max-width: 30em) {
-        .button { display: block }
+        .button {
+          font-size: 12px;
+          display: block;
+        }
       }
     </style>';
 
@@ -308,3 +311,73 @@
   }
 </script>
 
+<?php
+  function sendTestEmail(){
+    $pay_now_link = '<a href="#">pay</a>';
+
+    $customer_name = "Jesse";
+
+    $to = "jesse@burtonmediainc.com";
+    $subject = get_option('reminder_subject');
+
+    $styles = '<style type="text/css">
+      table {
+        width: 100%;
+      }
+      th {
+        background-color: #b279ff;
+        color: white;
+        font-weight: bold;
+        text-align: center;
+        padding: 10px;
+      }
+      td {
+        width: 50%;
+        padding: 25px;
+        text-align: center;
+      }
+      .button {
+        text-decoration: none;
+        text-transform: uppercase;
+        padding: 10px 15px;
+        cursor: pointer;
+        color: white;
+        border: 1px solid #8b53d8;
+        background: linear-gradient(to bottom,#b279ff 0,#a35fff 100%);
+        transition: all .3s ease;
+      }
+      .button:hover {
+        background: #8b53d8;
+      }
+      @media only screen and (max-width: 30em) {
+        .button {
+          font-size: 12px;
+          display: block;
+        }
+      }
+    </style>';
+
+    $invoice_details = '<table style="width: 100%; border: 1px solid black;">';
+      $invoice_details = $invoice_details . '<tr><th>Deposit</th><th>Balance</th></tr>';
+      $invoice_details = $invoice_details . '<tr>';
+        $invoice_details = $invoice_details . '<td>Paid $300.00 on January 12th, 2020</td>';
+        $invoice_details = $invoice_details . '<td><a class="button" href="#">Pay Balance of $939.75</a></td>';
+      $invoice_details = $invoice_details . '</tr>';
+    $invoice_details = $invoice_details . '</table>';
+
+    $content = str_replace(["{pay}", "{name}", "{details}"], [$pay_now_link, $customer_name, $invoice_details], wpautop(get_option('reminder_email')));
+
+    $body = $styles;
+    $body = $body . '<div class="content" style="width:650px; margin: 0 auto; font-family: sans-serif; font-size: 16px;">';
+      $body = $body . '<img src="https://toko-pa.com/wp-content/uploads/2020/01/image0.jpeg" />';
+      $body = $body . '<div style="margin: 25px 0;">';
+        $body = $body . $content;
+      $body = $body . '</div>';
+    $body = $body . '</div>';
+
+    $headers = array('Content-Type: text/html; charset=UTF-8');
+
+    wp_mail( $to, $subject, $body, $headers );
+  }
+  //sendTestEmail();
+?>

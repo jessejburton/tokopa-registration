@@ -30,6 +30,7 @@ async function getBalanceInfo() {
   balance_data.map(balance => {
     const row = document.querySelector(`tr[data-orderid="${balance.deposit_order_id}"]`);
     const order = JSON.parse(row.dataset.order);
+    if (!row) return;
 
     if (!balance.balance_order_id) {
       const variation = balance_amounts.filter(
@@ -164,7 +165,7 @@ function displayOrders(data, type) {
 
     accommodation.innerHTML = order.line_items[0].meta_data[0].value;
 
-    amount.innerHTML = "$" + order.line_items[0].total;
+    amount.innerHTML = "$" + order.total;
 
     tr.setAttribute("data-orderid", order.id);
     tr.setAttribute("data-accommodation", order.line_items[0].meta_data[0].value);

@@ -81,3 +81,55 @@
   </table>
   <?php submit_button(); ?>
 </form>
+
+
+<?php
+
+// Belonging Fields
+if($_product->id == 7811){
+  if(!function_exists('add_wc_checkout_fields')){
+    // Require address if a book is present
+    add_filter( 'woocommerce_checkout_fields' , 'add_wc_checkout_fields' );
+    function add_wc_checkout_fields( $fields ) {
+      $fields['billing']['billing_country']['required'] = true;
+      $fields['billing']['billing_country']['label'] = "Country";
+      $fields['billing']['billing_country']['type'] = "country";
+      $fields['billing']['billing_state']['required'] = true;
+      $fields['billing']['billing_state']['label'] = "State/Province";
+      $fields['billing']['billing_state']['type'] = "state";
+      $fields['billing']['billing_city']['required'] = true;
+      $fields['billing']['billing_city']['label'] = "City/Town";
+      $fields['billing']['billing_address_1']['required'] = true;
+      $fields['billing']['billing_address_1']['label'] = "Address Line 1";
+      $fields['billing']['billing_address_2']['required'] = false;
+      $fields['billing']['billing_address_2']['label'] = "Address Line 2";
+      $fields['billing']['billing_postcode']['required'] = true;
+      $fields['billing']['billing_postcode']['label'] = 'Postal Code';
+      return $fields;
+    }
+  }
+}
+
+// Registration Fields
+$product_id = $_product->id;
+$registration_id = intval(get_option('retreat_product_id'));
+$deposit_id = intval(get_option('deposit_product_id'));
+if($_product->id === $registration_id || $_product->id === $deposit_id){
+  if(!function_exists('add_wc_checkout_fields')){
+    // Require address if a book is present
+    add_filter( 'woocommerce_checkout_fields' , 'add_wc_checkout_fields' );
+    function add_wc_checkout_fields( $fields ) {
+      $fields['billing']['billing_country']['required'] = true;
+      $fields['billing']['billing_country']['label'] = "Country";
+      $fields['billing']['billing_country']['type'] = "country";
+      $fields['billing']['billing_state']['required'] = true;
+      $fields['billing']['billing_state']['label'] = "State/Province";
+      $fields['billing']['billing_state']['type'] = "state";
+      $fields['billing']['billing_city']['required'] = true;
+      $fields['billing']['billing_city']['label'] = "City/Town";
+      return $fields;
+    }
+  }
+}
+
+?>
