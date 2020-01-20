@@ -32,7 +32,7 @@ function add_tokopa_registration_plugin_script($hook) {
   if( $hook != 'tokopa-registration/registration-deposits.php' ) {
     return;
   }
-  wp_enqueue_script( 'tokopa-registration-scripts', plugins_url('tokopa-registration.js',__FILE__ ), array(), '1.3', 'all', false);
+  wp_enqueue_script( 'tokopa-registration-scripts', plugins_url('tokopa-registration.js',__FILE__ ), array(), '1.3.1', 'all', false);
 
   // Localize the plugin options to the script
   $consumer_key = get_option('woocommerce_consumer_key');
@@ -92,6 +92,13 @@ add_action( 'admin_menu', 'register_tokopa_registration_menu_page' );
 function register_tokopa_registration_settings() {
   add_option( 'reminder_subject', '');
   add_option( 'reminder_email', '');
+
+  add_option( 'commuter_stock', '');
+  add_option( 'shared_yurt_stock', '');
+  add_option( 'shared_regular_stock', '');
+  add_option( 'shared_deluxe_stock', '');
+  add_option( 'private_stock', '');
+
   add_option( 'deposit_product_id', '');
   add_option( 'retreat_product_id', '');
   add_option( 'balance_product_id', '');
@@ -100,6 +107,11 @@ function register_tokopa_registration_settings() {
 
   register_setting( 'tokopa_registration_options_group', 'reminder_subject', '' );
   register_setting( 'tokopa_registration_options_group', 'reminder_email', '' );
+  register_setting( 'tokopa_registration_options_group', 'commuter_stock', '' );
+  register_setting( 'tokopa_registration_options_group', 'shared_yurt_stock', '' );
+  register_setting( 'tokopa_registration_options_group', 'shared_regular_stock', '' );
+  register_setting( 'tokopa_registration_options_group', 'shared_deluxe_stock', '' );
+  register_setting( 'tokopa_registration_options_group', 'private_stock', '' );
   register_setting( 'tokopa_registration_options_group', 'deposit_product_id', '' );
   register_setting( 'tokopa_registration_options_group', 'retreat_product_id', '' );
   register_setting( 'tokopa_registration_options_group', 'balance_product_id', '' );

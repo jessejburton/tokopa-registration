@@ -36,6 +36,50 @@
     </tr>
   </table>
 
+  <h2>Rooms</h2>
+  <table>
+    <tr valign="top">
+      <th scope="row">
+        <label for="commuter_stock">Commuter</label>
+      </th>
+      <td>
+        <input type="text" id="commuter_stock" name="commuter_stock" value="<?php echo get_option('commuter_stock'); ?>" />
+      </td>
+    </tr>
+    <tr valign="top">
+      <th scope="row">
+        <label for="shared_yurt_stock">Shared Yurt</label>
+      </th>
+      <td>
+        <input type="text" id="shared_yurt_stock" name="shared_yurt_stock" value="<?php echo get_option('shared_yurt_stock'); ?>" />
+      </td>
+    </tr>
+    <tr valign="top">
+      <th scope="row">
+        <label for="shared_regular_stock">Shared Regular</label>
+      </th>
+      <td>
+        <input type="text" id="shared_regular_stock" name="shared_regular_stock" value="<?php echo get_option('shared_regular_stock'); ?>" />
+      </td>
+    </tr>
+    <tr valign="top">
+      <th scope="row">
+        <label for="shared_deluxe_stock">Share Deluxe</label>
+      </th>
+      <td>
+        <input type="text" id="shared_deluxe_stock" name="shared_deluxe_stock" value="<?php echo get_option('shared_deluxe_stock'); ?>" />
+      </td>
+    </tr>
+    <tr valign="top">
+      <th scope="row">
+        <label for="private_stock">Private</label>
+      </th>
+      <td>
+        <input type="text" id="private_stock" name="private_stock" value="<?php echo get_option('private_stock'); ?>" />
+      </td>
+    </tr>
+  </table>
+
   <h2>Advanced</h2>
   <table>
     <tr valign="top">

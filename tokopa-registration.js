@@ -1,6 +1,7 @@
 // The options variable gets created using wp_localize_script in tokopa-registration.php
-getOrders(options.deposit_id, "deposit", getBalanceInfo);
+//getOrders(options.deposit_id, "deposit", getBalanceInfo);
 getOrders(options.product_id, "full");
+getBalanceInfo();
 
 const wrapper = document.querySelector(".registration-wrapper");
 
@@ -29,8 +30,9 @@ async function getBalanceInfo() {
 
   balance_data.map(balance => {
     const row = document.querySelector(`tr[data-orderid="${balance.deposit_order_id}"]`);
-    const order = JSON.parse(row.dataset.order);
     if (!row) return;
+
+    const order = JSON.parse(row.dataset.order);
 
     if (!balance.balance_order_id) {
       const variation = balance_amounts.filter(
